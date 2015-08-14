@@ -1,19 +1,9 @@
-void prepara_fft()
-{
-   w1=new double[512];
-   w2=new double[512];
-   
-   for(int i=0;i<512;i++){
-     w1[i]=(double)(0.5*Math.sin(12*6.28*i/rate))+(double)(0.5*Math.sin(6*6.28*i/rate))+(double)(0.5*Math.sin(31*6.28*i/rate));
-     w2[i]=0;
-   }
-  transformRadix2((w1),(w2));
-}
 
 void pinta_fft(int ladoI, int ladoD, int offset)
 {
   int x=0;
-  for(int i=p_EEG1;i<p_EEG1+512;i++){
+  int puntos_fft=512;
+  for(int i=p_EEG1;i<p_EEG1+puntos_fft;i++){
      w1[x]=EEG1[i%PulseWindowWidth];
      w2[x++]=0;
   }
@@ -25,8 +15,8 @@ void pinta_fft(int ladoI, int ladoD, int offset)
   float k=-6; //calculado a ojo    
   
   beginShape();  
-  for(int i=0;i<256;i++){
-     float cx1=(float)map(i,0,256,ladoI,ladoD);     
+  for(int i=0;i<puntos_fft/2;i++){
+     float cx1=(float)map(i,0,puntos_fft/2,ladoI,ladoD);     
      float y1=(float)offset+k*((float)Math.log((float)Math.pow((float)w1[i],2.0)));
      stroke(0,255,0);
      vertex(cx1,(y1>offset+50)?offset+50:y1);
@@ -85,4 +75,16 @@ void pinta_fft(int ladoI, int ladoD, int offset)
         break;
     }
   }
-  
+
+void prepara_fft()
+{
+  // no se usa, solo es para probar la fft
+   w1=new double[512];
+   w2=new double[512];
+   
+   for(int i=0;i<512;i++){
+     w1[i]=(double)(0.5*Math.sin(12*6.28*i/rate))+(double)(0.5*Math.sin(6*6.28*i/rate))+(double)(0.5*Math.sin(31*6.28*i/rate));
+     w2[i]=0;
+   }
+  transformRadix2((w1),(w2));
+}
