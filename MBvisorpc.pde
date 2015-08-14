@@ -30,6 +30,7 @@ color eggshell = color(255, 253, 248);
 int anchoBarra=35;
 int anchopantalla=700;
 int maxADC=1024;
+int tasaRefresc=100;
 
 
 
@@ -53,17 +54,19 @@ int margenizdo=(anchopantalla-PulseWindowWidth)/2;
 int puntosPromedio=100;
 int margen_izdo_fft;
 int margen_dcho_fft;
-  
+ 
+ int linea=-300;
+ 
 // FFT
   double[] w1,w2;
   int rate=100;
 
 void setup() {
   size(700, 600);  // Stage size
-  frameRate(100);  
+  frameRate(tasaRefresc);  
   font = loadFont("Arial-BoldMT-24.vlw");
   
-  textFont(font);
+ // textFont(font);
   textAlign(CENTER);
   rectMode(CENTER);
   ellipseMode(CENTER);  
@@ -97,8 +100,11 @@ void setup() {
   pv_EEG2=0;
   
   PEEG1 = new int[PromedioWindowWidth];          // initialize raw pulse waveform array
-  
-  
+
+  //FFT
+   w1=new double[512];
+   w2=new double[512];
+
   
 // set the visualizer lines to 0
  for (int i=0; i<EEG1.length; i++){
@@ -125,21 +131,24 @@ void setup() {
 }
   
 void draw() {
-  int salto=1;
-  adquirir(salto);
-  if(p_EEG1%salto==0){
-   // pinta_pantallas();
-    pinta_EEG();
-  } 
-  if(p_EEG1%10==0){
+   int salto=1;
+   adquirir(salto);
+   pinta_EEG();
+  
+   if(p_EEG1%10==0){
       scaleBar.update (mouseX, mouseY);
       scaleBar.display();
       zoom = scaleBar.getPos();                     
-  //    pinta_textos();
       pinta_cursor();
-      busca_picos(700,20);
+      busca_picos(20);
       pinta_promedio();
+
       pinta_fft(margen_izdo_fft,margen_dcho_fft,450);
+      textSize(25);
+      fill(255);
+      rect(width/2,575,width,50);
+      fill(0);
+      text("fr:"+nf(tasaRefresc,2)+" mc:"+nf(nmarcadores,2), 300, 575);
   }   
    
 }  //end of draw loop

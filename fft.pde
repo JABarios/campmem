@@ -1,28 +1,5 @@
 
-void pinta_fft(int ladoI, int ladoD, int offset)
-{
-  int x=0;
-  int puntos_fft=512;
-  for(int i=p_EEG1;i<p_EEG1+puntos_fft;i++){
-     w1[x]=EEG1[i%PulseWindowWidth];
-     w2[x++]=0;
-  }
-  transformRadix2((w1),(w2));
- 
-  noStroke();
-  fill(eggshell);  // color for the window background
-  rect(CenterBPMWindow,height/3*2,BPMWindowWidth,BPMWindowHeight);  
-  float k=-6; //calculado a ojo    
-  
-  beginShape();  
-  for(int i=0;i<puntos_fft/2;i++){
-     float cx1=(float)map(i,0,puntos_fft/2,ladoI,ladoD);     
-     float y1=(float)offset+k*((float)Math.log((float)Math.pow((float)w1[i],2.0)));
-     stroke(0,255,0);
-     vertex(cx1,(y1>offset+50)?offset+50:y1);
-   }
-   endShape();  
-}
+
 
 
 /* 

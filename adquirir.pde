@@ -19,34 +19,40 @@ void adquirir(int n) {
  }
 }
 
-
-
   
-void busca_picos(int nivel,int paso) {
+void busca_picos(int paso) {
  
 int npicos=0;
 int yc=0;
 int[] xx;
 
-xx=jbh_std(vEEG1);
-nivel=xx[0]+xx[1]*7/5;
-for (int x = 0; x < marcadores.length-1; x++) { 
+for (int x = 0; x < marcadores.length; x++) { 
       marcadores[x]=0;
   }
 
-for (int x = 0; x < vEEG1.length-1; x++) { 
+nmarcadores=0;
+xx=jbh_std(vEEG1);
+int nivel=xx[0]+xx[1]*4/5;
+
+for (int x = 0; x < vEEG1.length; x++) { 
   if(vEEG1[x]>nivel){
+     int maximo=vEEG1[x];
+     for(int y=x;y<x+paso;y++){
+       if(vEEG1[y%PulseWindowWidth]>maximo){
+         maximo=vEEG1[y%PulseWindowWidth];
+         x=y;
+       }
+     }  
       marcadores[npicos]=x;
       x+=paso;
       npicos++;
-    
   }
  }
  nmarcadores=npicos;
  for (int x = 0; x < nmarcadores; x++) { 
-    yc=vEEG1[marcadores[x]];
+    yc=vEEG1[marcadores[x]%PulseWindowWidth];
     yc=int(CenterPulseWindow+zoom*map(yc,0,maxADC,-PulseWindowHeight/2,PulseWindowHeight/2));
-   rect(marcadores[x]+margenizdo,yc,6,6);
+    rect(marcadores[x]+margenizdo,yc,6,6);
   }
  
 }
